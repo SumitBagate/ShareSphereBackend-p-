@@ -1,4 +1,4 @@
-const Transaction = require("../models/transcation");
+const Transaction = require("../models/Transcation");
 const User = require("../models/User");
 
 // Controller to get transaction history of a user
