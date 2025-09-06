@@ -6,7 +6,7 @@ const ensureUserExists = async (req, res, next) => {
         const firebaseUID = req.user.uid;
 
         // Check if user exists in MongoDB
-        let user = await User.findOne({ firebaseUID });
+        let user = await User.findOne({ firebaseUID: firebaseUID });
 
         if (!user) {
             console.log(`🔹 User ${firebaseUID} not found in DB. Fetching details from Firebase...`);

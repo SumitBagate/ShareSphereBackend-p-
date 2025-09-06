@@ -8,15 +8,17 @@ const attachDbUser = async (req, res, next) => {
     let user = await User.findOne({ firebaseUID: uid });
 
     if (!user) {
-      // Auto-create user from decoded Firebase token
+      // Auto-create user from Firebase token
       user = await User.create({
         firebaseUID: uid,
         email: req.user.email,
         name: req.user.name,
         profilePic: req.user.picture,
+        credits: 10,
+        uploadedFiles: [],
+        downloadedFiles: []
       });
-
-      console.log("🆕 User created in DB:", user);
+      console.log("🆕 User created in DB:", user.email);
     } else {
       console.log("✅ User found in DB:", user.email);
     }
@@ -24,7 +26,7 @@ const attachDbUser = async (req, res, next) => {
     req.dbUser = user;
     next();
   } catch (error) {
-    console.error("❌ attachDbUser error:", error);
+    console.error("❌ attachDbUser error:", error.message);
     res.status(500).json({ error: "Failed to attach user" });
   }
 };

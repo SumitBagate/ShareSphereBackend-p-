@@ -1,11 +1,15 @@
 const express = require("express");
 const multer = require("multer");
-const authenticateUser = require("../Middleware/authenticateUser");
+
+
+const authenticateUser = require("../middleware/authUserid");
 const ensureUserExists = require("../middleware/ensureUserExist");
 const {
     uploadFile,
     getAllFiles,
     getFile,
+    deleteFile,
+    previewFile,
     downloadFile
 } = require("../controllers/fileController");
 const { likeFile } = require("../controllers/likeController");
@@ -15,6 +19,11 @@ const { getTransactionHistory } = require("../controllers/transactionController"
 const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
+
+const attachDbUser = require("../middleware/attachDbuser");
+
+
+router.get("/preview/:fileID", previewFile);
 
 // File Upload
 router.post("/upload", authenticateUser, ensureUserExists, upload.single("file"), uploadFile);
@@ -26,7 +35,7 @@ router.get("/all", authenticateUser, getAllFiles);
 router.get("/uploads/:filename", getFile);
 
 // Download File
-router.get("/download/:fileID", authenticateUser, downloadFile);
+router.get("/download/:fileID", authenticateUser, ensureUserExists, attachDbUser, downloadFile);
 
 // Get Transaction History
 router.get("/history", authenticateUser, getTransactionHistory);
@@ -37,7 +46,12 @@ router.post("/like/:fileID", authenticateUser, likeFile);
 // Report an Issue
 router.post("/report/:fileID", authenticateUser, reportIssue);
 
-// Fetch all Issues of a File
+// Fetch all Issues  .
+
 router.get("/issues/:fileID", authenticateUser, getFileIssues);
+
+//delete file
+router.delete("/delete/:fileID", authenticateUser, deleteFile);
+
 
 module.exports = router;

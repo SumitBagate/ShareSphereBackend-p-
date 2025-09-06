@@ -12,7 +12,7 @@ const likeFile = async (req, res) => {
         console.log("🔹 Checking File ID:", fileID);
 
         // Check if file exists
-        const file = await File.findOne({ fileID: fileID });
+        const file = await File.findOne({ _id: fileID });
 
         if (!file) {
             console.log("❌ File not found!");

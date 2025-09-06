@@ -1,13 +1,14 @@
+const mongoose = require("mongoose");
 const File = require("../models/File");
 const User = require("../models/User");
 
 // Controller to report an issue for a downloaded file
 const reportIssue = async (req, res) => {
     try {
-        console.log("🟢 Report Route Hit!");
+        console.log("🟢 [Report] Route Hit at", new Date().toISOString());
         const userId = req.user.uid;
         const fileID = req.params.fileID;
-        console.log("🔹 Checking File ID:", fileID);
+        console.log("🔹 Checking File ID:", fileID); 
 
         if (!mongoose.Types.ObjectId.isValid(fileID)) {
             return res.status(400).json({ error: "Invalid file ID format" });
@@ -20,16 +21,6 @@ const reportIssue = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: "User not found in database" });
         }
-
-        // Fetch file from database
-        const file = await File.findOne({ fileID: fileObjectId });
-        if (!file) {
-            return res.status(404).json({ error: "File not found in database" });
-        }
-
-        console.log("✅ File found:", file);
-
-        // Check if the user has downloaded the file
         const hasDownloaded = user.downloadedFiles.some(downloadedFile =>
             downloadedFile.equals(fileObjectId)
         );
@@ -37,6 +28,16 @@ const reportIssue = async (req, res) => {
         if (!hasDownloaded) {
             return res.status(403).json({ error: "You can only report files you have downloaded." });
         }
+        // Fetch file from database
+        const file = await File.findOne({ _id: fileObjectId });
+        if (!file) {
+            return res.status(404).json({ error: "File not found in database" });
+        }
+
+        console.log("✅ File found:", file);
+
+        // Check if the user has downloaded the file
+    
 
         // Extract issue details from request body
         const { issueType, description } = req.body;
@@ -89,7 +90,7 @@ const getFileIssues = async (req, res) => {
                 };
             })
         );
-
+        
         // Return the issues array
         res.status(200).json({ issues: issuesWithEmails });
 

@@ -6,6 +6,8 @@ const userSchema = new mongoose.Schema({
   uploadedFiles: [{ type: mongoose.Schema.Types.ObjectId, ref: "File" }],
   downloadedFiles: [{ type: mongoose.Schema.Types.ObjectId, ref: "File" }],
   credits: { type: Number, default: 0 },
+  name: { type: String }, // ✅ define type only
+  profilePic: { type: String }, 
   transactions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Transaction" }] // ✅ Store transactions
 });
 
