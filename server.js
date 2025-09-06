@@ -17,7 +17,12 @@ connectDB();
 
 // ✅ Middleware
 
-app.use(cors());
+app.use(cors({
+    origin: "https://share-sphere-kappa.vercel.app", // ✅ your frontend
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
+
 app.use(express.json()); // Parses JSON requests
 app.use(express.urlencoded({ extended: true })); // Parses form-data fields
  

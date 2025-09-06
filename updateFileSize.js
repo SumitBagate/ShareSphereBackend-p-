@@ -3,15 +3,16 @@
 
 
 const mongoose = require("mongoose");
+const dotenv = require("env");
 const File = require("./models/File"); // Adjust path if needed
 
-// ✅ Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017/sharesphere", { 
-    useNewUrlParser: true, 
-    useUnifiedTopology: true 
-})
-.then(() => console.log("Connected to MongoDB"))
-.catch(err => console.error("MongoDB connection error:", err));
+// Load environment variables from .env file
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("✅ Connected to MongoDB"))
+    .catch((err) => console.error("❌ MongoDB connection error:", err));
+
 
 // ✅ Update all existing files by setting `size` to 10MB
 async function updateFileSize() {
